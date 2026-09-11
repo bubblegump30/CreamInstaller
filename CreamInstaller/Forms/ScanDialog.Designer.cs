@@ -32,7 +32,7 @@ namespace CreamInstaller.Forms
             loadButton = new Button();
             saveButton = new Button();
             selectionTreeView = new CustomTreeView();
-            filterTextBox = new System.Windows.Forms.TextBox();
+            filterTextBox = new TextBox();
             groupBox.SuspendLayout();
             allCheckBoxFlowPanel.SuspendLayout();
             SuspendLayout();
@@ -40,13 +40,10 @@ namespace CreamInstaller.Forms
             // acceptButton
             // 
             acceptButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            acceptButton.AutoSize = true;
-            acceptButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             acceptButton.DialogResult = DialogResult.OK;
-            acceptButton.Location = new System.Drawing.Point(479, 243);
+            acceptButton.Location = new System.Drawing.Point(572, 406);
             acceptButton.Name = "acceptButton";
-            acceptButton.Padding = new Padding(12, 0, 12, 0);
-            acceptButton.Size = new System.Drawing.Size(57, 25);
+            acceptButton.Size = new System.Drawing.Size(90, 36);
             acceptButton.TabIndex = 6;
             acceptButton.Text = "OK";
             acceptButton.UseVisualStyleBackColor = true;
@@ -54,10 +51,10 @@ namespace CreamInstaller.Forms
             // filterTextBox
             // 
             filterTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            filterTextBox.Location = new System.Drawing.Point(12, 14);
+            filterTextBox.Location = new System.Drawing.Point(18, 18);
             filterTextBox.Name = "filterTextBox";
-            filterTextBox.PlaceholderText = "Enter the name or AppID of a game to search";
-            filterTextBox.Size = new System.Drawing.Size(524, 23);
+            filterTextBox.PlaceholderText = "Search by game name or AppID";
+            filterTextBox.Size = new System.Drawing.Size(644, 23);
             filterTextBox.TabIndex = 0;
             filterTextBox.TextChanged += OnFilterTextChanged;
             // 
@@ -66,13 +63,14 @@ namespace CreamInstaller.Forms
             groupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBox.Controls.Add(selectionTreeView);
             groupBox.Controls.Add(allCheckBoxFlowPanel);
-            groupBox.Location = new System.Drawing.Point(12, 43);
-            groupBox.MinimumSize = new System.Drawing.Size(240, 40);
+            groupBox.Location = new System.Drawing.Point(18, 53);
+            groupBox.MinimumSize = new System.Drawing.Size(320, 120);
             groupBox.Name = "groupBox";
-            groupBox.Size = new System.Drawing.Size(524, 194);
+            groupBox.Padding = new Padding(12, 10, 12, 12);
+            groupBox.Size = new System.Drawing.Size(644, 335);
             groupBox.TabIndex = 3;
             groupBox.TabStop = false;
-            groupBox.Text = "Choices";
+            groupBox.Text = "Choose Programs && Games";
             // 
             // selectionTreeView
             // 
@@ -80,12 +78,12 @@ namespace CreamInstaller.Forms
             selectionTreeView.BorderStyle = BorderStyle.None;
             selectionTreeView.CheckBoxes = true;
             selectionTreeView.Dock = DockStyle.Fill;
-            selectionTreeView.Location = new System.Drawing.Point(3, 19);
+            selectionTreeView.Location = new System.Drawing.Point(12, 26);
             selectionTreeView.Name = "selectionTreeView";
             selectionTreeView.ShowLines = false;
             selectionTreeView.ShowPlusMinus = false;
             selectionTreeView.ShowRootLines = false;
-            selectionTreeView.Size = new System.Drawing.Size(518, 203);
+            selectionTreeView.Size = new System.Drawing.Size(620, 297);
             selectionTreeView.TabIndex = 0;
             // 
             // allCheckBoxFlowPanel
@@ -94,18 +92,18 @@ namespace CreamInstaller.Forms
             allCheckBoxFlowPanel.AutoSize = true;
             allCheckBoxFlowPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             allCheckBoxFlowPanel.Controls.Add(allCheckBox);
-            allCheckBoxFlowPanel.Location = new System.Drawing.Point(477, -1);
+            allCheckBoxFlowPanel.Location = new System.Drawing.Point(574, 1);
             allCheckBoxFlowPanel.Margin = new Padding(0);
             allCheckBoxFlowPanel.Name = "allCheckBoxFlowPanel";
-            allCheckBoxFlowPanel.Size = new System.Drawing.Size(42, 19);
+            allCheckBoxFlowPanel.Size = new System.Drawing.Size(56, 24);
             allCheckBoxFlowPanel.TabIndex = 1007;
             // 
             // allCheckBox
             // 
             allCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             allCheckBox.AutoSize = true;
-            allCheckBox.Location = new System.Drawing.Point(2, 0);
-            allCheckBox.Margin = new Padding(2, 0, 0, 0);
+            allCheckBox.Location = new System.Drawing.Point(0, 2);
+            allCheckBox.Margin = new Padding(0, 2, 0, 0);
             allCheckBox.Name = "allCheckBox";
             allCheckBox.Size = new System.Drawing.Size(40, 19);
             allCheckBox.TabIndex = 1;
@@ -114,10 +112,10 @@ namespace CreamInstaller.Forms
             // 
             // sortCheckBox
             // 
-            sortCheckBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            sortCheckBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             sortCheckBox.AutoSize = true;
-            sortCheckBox.Checked = true; // Enable Sort By Name by default
-            sortCheckBox.Location = new System.Drawing.Point(220, 247);
+            sortCheckBox.Checked = true;
+            sortCheckBox.Location = new System.Drawing.Point(111, 415);
             sortCheckBox.Margin = new Padding(3, 0, 0, 0);
             sortCheckBox.Name = "sortCheckBox";
             sortCheckBox.Size = new System.Drawing.Size(98, 19);
@@ -128,13 +126,10 @@ namespace CreamInstaller.Forms
             // cancelButton
             // 
             cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            cancelButton.AutoSize = true;
-            cancelButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             cancelButton.DialogResult = DialogResult.Cancel;
-            cancelButton.Location = new System.Drawing.Point(12, 243);
+            cancelButton.Location = new System.Drawing.Point(18, 406);
             cancelButton.Name = "cancelButton";
-            cancelButton.Padding = new Padding(12, 0, 12, 0);
-            cancelButton.Size = new System.Drawing.Size(77, 25);
+            cancelButton.Size = new System.Drawing.Size(87, 36);
             cancelButton.TabIndex = 2;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
@@ -142,13 +137,10 @@ namespace CreamInstaller.Forms
             // loadButton
             // 
             loadButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            loadButton.AutoSize = true;
-            loadButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             loadButton.Enabled = false;
-            loadButton.Location = new System.Drawing.Point(406, 243);
+            loadButton.Location = new System.Drawing.Point(476, 406);
             loadButton.Name = "loadButton";
-            loadButton.Padding = new Padding(12, 0, 12, 0);
-            loadButton.Size = new System.Drawing.Size(67, 25);
+            loadButton.Size = new System.Drawing.Size(90, 36);
             loadButton.TabIndex = 5;
             loadButton.Text = "Load";
             loadButton.UseVisualStyleBackColor = true;
@@ -157,13 +149,10 @@ namespace CreamInstaller.Forms
             // saveButton
             // 
             saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            saveButton.AutoSize = true;
-            saveButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             saveButton.Enabled = false;
-            saveButton.Location = new System.Drawing.Point(335, 243);
+            saveButton.Location = new System.Drawing.Point(380, 406);
             saveButton.Name = "saveButton";
-            saveButton.Padding = new Padding(12, 0, 12, 0);
-            saveButton.Size = new System.Drawing.Size(65, 25);
+            saveButton.Size = new System.Drawing.Size(90, 36);
             saveButton.TabIndex = 4;
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = true;
@@ -174,9 +163,8 @@ namespace CreamInstaller.Forms
             AcceptButton = acceptButton;
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new System.Drawing.Size(548, 279);
+            AutoSize = false;
+            ClientSize = new System.Drawing.Size(680, 460);
             Controls.Add(sortCheckBox);
             Controls.Add(saveButton);
             Controls.Add(loadButton);
@@ -184,9 +172,10 @@ namespace CreamInstaller.Forms
             Controls.Add(acceptButton);
             Controls.Add(groupBox);
             Controls.Add(filterTextBox);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
+            FormBorderStyle = FormBorderStyle.Sizable;
+            MaximizeBox = true;
             MinimizeBox = false;
+            MinimumSize = new System.Drawing.Size(600, 390);
             Name = "ScanDialog";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.Manual;
@@ -210,6 +199,6 @@ namespace CreamInstaller.Forms
         private Button loadButton;
         private Button saveButton;
         private CheckBox sortCheckBox;
-        private System.Windows.Forms.TextBox filterTextBox;
+        private TextBox filterTextBox;
     }
 }
