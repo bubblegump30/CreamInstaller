@@ -182,13 +182,19 @@ internal static class ModernTheme
                 4);
         }
 
-        // Main form: visually center the entire top command row.
+        // Main form: keep the command row DPI-safe. The right-side controls size to
+        // their rendered text instead of fixed pixel widths, preventing wrapping or clipping
+        // at 125%, 150%, and other Windows display scale factors.
         TableLayoutPanel topOptionsTable = FindControl<TableLayoutPanel>(form, "topOptionsTable");
         if (topOptionsTable is not null)
         {
-            topOptionsTable.Height = 36;
+            topOptionsTable.Height = 40;
+            topOptionsTable.Padding = new Padding(0, 0, 2, 0);
             if (topOptionsTable.RowStyles.Count > 0)
-                topOptionsTable.RowStyles[0].Height = 36F;
+            {
+                topOptionsTable.RowStyles[0].SizeType = SizeType.Absolute;
+                topOptionsTable.RowStyles[0].Height = 40F;
+            }
         }
 
         Control unlockerToggle = FindControl<Control>(form, "useSmokeApiToggle");
@@ -208,18 +214,34 @@ internal static class ModernTheme
 
         FlowLayoutPanel mainSelectAllPanel = FindControl<FlowLayoutPanel>(form, "allCheckBoxLayoutPanel");
         if (mainSelectAllPanel is not null)
-            mainSelectAllPanel.Margin = new Padding(12, 3, 8, 0);
+        {
+            mainSelectAllPanel.AutoSize = true;
+            mainSelectAllPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            mainSelectAllPanel.Margin = new Padding(16, 2, 12, 0);
+            mainSelectAllPanel.WrapContents = false;
+        }
 
         CheckBox mainSelectAll = FindControl<CheckBox>(form, "allCheckBox");
         if (mainSelectAll is not null && mainSelectAll.Parent?.Name == "allCheckBoxLayoutPanel")
         {
-            mainSelectAll.Size = new Size(92, 30);
-            mainSelectAll.Margin = new Padding(0, 3, 0, 0);
+            mainSelectAll.AutoSize = true;
+            mainSelectAll.MinimumSize = new Size(104, 32);
+            mainSelectAll.Margin = new Padding(0, 4, 0, 0);
+            mainSelectAll.Padding = new Padding(0);
+            mainSelectAll.TextAlign = ContentAlignment.MiddleLeft;
         }
 
         Button settingsButton = FindControl<Button>(form, "settingsButton");
         if (settingsButton is not null)
-            settingsButton.Size = new Size(96, 36);
+        {
+            settingsButton.AutoSize = true;
+            settingsButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            settingsButton.MinimumSize = new Size(108, 36);
+            settingsButton.Padding = new Padding(12, 0, 12, 0);
+            settingsButton.Margin = new Padding(0, 2, 0, 0);
+        }
+
+        topOptionsTable?.PerformLayout();
 
         // Keep the empty-state message inside the Programs & Games surface so it remains
         // centered when the progress area is collapsed and the group box grows vertically.
