@@ -46,12 +46,20 @@ internal class CustomForm : Form
     {
         base.OnHandleCreated(e);
         ThemeManager.Apply(this); // apply current theme (initial or toggled)
+        ModernTheme.Apply(this); // presentation-only UX polish layered on top
     }
 
     protected override void OnShown(EventArgs e)
     {
         base.OnShown(e);
         ThemeManager.Apply(this); // ensure late-added controls also themed
+        ModernTheme.Apply(this);
+    }
+
+    protected override void OnActivated(EventArgs e)
+    {
+        base.OnActivated(e);
+        ModernTheme.Apply(this); // restore button hierarchy after live theme changes
     }
 
     private void OnHelpButtonClicked(object sender, EventArgs args)
