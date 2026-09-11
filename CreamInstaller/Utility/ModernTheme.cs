@@ -191,7 +191,7 @@ internal static class ModernTheme
                 topOptionsTable.RowStyles[0].Height = 36F;
         }
 
-        ToggleSwitch unlockerToggle = FindControl<ToggleSwitch>(form, "useSmokeApiToggle");
+        Control unlockerToggle = FindControl<Control>(form, "useSmokeApiToggle");
         if (unlockerToggle is not null)
             unlockerToggle.Margin = new Padding(0, 7, 8, 0);
 
