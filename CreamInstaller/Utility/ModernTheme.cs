@@ -39,7 +39,9 @@ internal static class ModernTheme
 
         bool dark = Program.DarkModeEnabled;
         Color window = dark ? DarkWindow : LightWindow;
+        Color surface = dark ? DarkSurface : LightSurface;
         Color text = dark ? DarkText : LightText;
+        Color muted = dark ? DarkMuted : LightMuted;
 
         form.SuspendLayout();
         form.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
@@ -48,6 +50,8 @@ internal static class ModernTheme
 
         foreach (Control control in form.Controls)
             ApplyControl(control, dark);
+
+        ApplyLayoutPolish(form, surface, text, muted);
 
         form.ResumeLayout(true);
         form.Invalidate(true);
@@ -131,6 +135,115 @@ internal static class ModernTheme
                 panel.BackColor = window;
                 break;
         }
+    }
+
+    /// <summary>
+    /// Final presentation-only adjustments that depend on a control's role in a form.
+    /// No application state, event wiring, or business logic is changed here.
+    /// </summary>
+    private static void ApplyLayoutPolish(Form form, Color surface, Color text, Color muted)
+    {
+        // Scan dialog: give the search field more breathing room and rebuild its cue banner
+        // once after ThemeManager's native refresh. This avoids the ghosted/double-drawn
+        // placeholder that can occur on themed WinForms text boxes.
+        TextBox filterTextBox = FindControl<TextBox>(form, "filterTextBox");
+        GroupBox scanGroupBox = FindControl<GroupBox>(form, "groupBox");
+        if (filterTextBox is not null)
+        {
+            filterTextBox.AutoSize = false;
+            filterTextBox.Height = 32;
+            filterTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+
+            if (filterTextBox.TextLength == 0 && !string.IsNullOrEmpty(filterTextBox.PlaceholderText))
+            {
+                string placeholder = filterTextBox.PlaceholderText;
+                filterTextBox.PlaceholderText = string.Empty;
+                filterTextBox.PlaceholderText = placeholder;
+            }
+        }
+
+        if (scanGroupBox is not null)
+        {
+            int originalBottom = scanGroupBox.Bottom;
+            if (filterTextBox is not null)
+                scanGroupBox.Top = filterTextBox.Bottom + 12;
+            scanGroupBox.Height = Math.Max(120, originalBottom - scanGroupBox.Top);
+            scanGroupBox.Padding = new Padding(12, 16, 12, 12);
+        }
+
+        FlowLayoutPanel scanSelectAllPanel = FindControl<FlowLayoutPanel>(form, "allCheckBoxFlowPanel");
+        if (scanSelectAllPanel is not null && scanGroupBox is not null)
+        {
+            scanSelectAllPanel.BackColor = surface;
+            scanSelectAllPanel.Padding = new Padding(6, 1, 4, 1);
+            Size preferred = scanSelectAllPanel.PreferredSize;
+            scanSelectAllPanel.Location = new Point(
+                Math.Max(12, scanGroupBox.ClientSize.Width - preferred.Width - 12),
+                4);
+        }
+
+        // Main form: visually center the entire top command row.
+        TableLayoutPanel topOptionsTable = FindControl<TableLayoutPanel>(form, "topOptionsTable");
+        if (topOptionsTable is not null)
+        {
+            topOptionsTable.Height = 36;
+            if (topOptionsTable.RowStyles.Count > 0)
+                topOptionsTable.RowStyles[0].Height = 36F;
+        }
+
+        ToggleSwitch unlockerToggle = FindControl<ToggleSwitch>(form, "useSmokeApiToggle");
+        if (unlockerToggle is not null)
+            unlockerToggle.Margin = new Padding(0, 7, 8, 0);
+
+        Label unlockerLabel = FindControl<Label>(form, "useSmokeApiLabel");
+        if (unlockerLabel is not null)
+            unlockerLabel.Margin = new Padding(0, 8, 6, 0);
+
+        Button helpButton = FindControl<Button>(form, "useSmokeAPIHelpButton");
+        if (helpButton is not null)
+        {
+            helpButton.Size = new Size(30, 30);
+            helpButton.Margin = new Padding(2, 3, 0, 0);
+        }
+
+        FlowLayoutPanel mainSelectAllPanel = FindControl<FlowLayoutPanel>(form, "allCheckBoxLayoutPanel");
+        if (mainSelectAllPanel is not null)
+            mainSelectAllPanel.Margin = new Padding(12, 3, 8, 0);
+
+        CheckBox mainSelectAll = FindControl<CheckBox>(form, "allCheckBox");
+        if (mainSelectAll is not null && mainSelectAll.Parent?.Name == "allCheckBoxLayoutPanel")
+        {
+            mainSelectAll.Size = new Size(92, 30);
+            mainSelectAll.Margin = new Padding(0, 3, 0, 0);
+        }
+
+        Button settingsButton = FindControl<Button>(form, "settingsButton");
+        if (settingsButton is not null)
+            settingsButton.Size = new Size(96, 36);
+
+        // Keep the empty-state message inside the Programs & Games surface so it remains
+        // centered when the progress area is collapsed and the group box grows vertically.
+        GroupBox programsGroupBox = FindControl<GroupBox>(form, "programsGroupBox");
+        Label noneFoundLabel = FindControl<Label>(form, "noneFoundLabel");
+        if (programsGroupBox is not null && noneFoundLabel is not null)
+        {
+            if (noneFoundLabel.Parent != programsGroupBox)
+                noneFoundLabel.Parent = programsGroupBox;
+
+            noneFoundLabel.Dock = DockStyle.Fill;
+            noneFoundLabel.Padding = new Padding(24);
+            noneFoundLabel.BackColor = surface;
+            noneFoundLabel.ForeColor = muted;
+            noneFoundLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            noneFoundLabel.TextAlign = ContentAlignment.MiddleCenter;
+            noneFoundLabel.BringToFront();
+        }
+    }
+
+    private static T FindControl<T>(Control root, string name) where T : Control
+    {
+        Control[] matches = root.Controls.Find(name, true);
+        return matches.Length > 0 ? matches[0] as T : null;
     }
 
     private static void StyleButton(Button button, Color surface, Color hover, Color border, Color text)
