@@ -143,23 +143,57 @@ internal static class ModernTheme
     /// </summary>
     private static void ApplyLayoutPolish(Form form, Color surface, Color text, Color muted)
     {
-        // Scan dialog: give the search field more breathing room and rebuild its cue banner
-        // once after ThemeManager's native refresh. This avoids the ghosted/double-drawn
-        // placeholder that can occur on themed WinForms text boxes.
+        // Scan dialog: use a controlled watermark instead of the native WinForms cue banner.
+        // The native placeholder can be redrawn twice when Windows theme messages are reapplied,
+        // which produces the ghosted text seen on some DPI/theme combinations.
         TextBox filterTextBox = FindControl<TextBox>(form, "filterTextBox");
         GroupBox scanGroupBox = FindControl<GroupBox>(form, "groupBox");
         if (filterTextBox is not null)
         {
+            const string watermarkName = "filterTextBoxWatermark";
+            const string watermarkText = "Search by game name or AppID";
+
             filterTextBox.AutoSize = false;
             filterTextBox.Height = 32;
             filterTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
 
-            if (filterTextBox.TextLength == 0 && !string.IsNullOrEmpty(filterTextBox.PlaceholderText))
+            // Disable the native cue banner so only one placeholder layer is painted.
+            filterTextBox.PlaceholderText = string.Empty;
+
+            Label watermark = FindControl<Label>(form, watermarkName);
+            if (watermark is null)
             {
-                string placeholder = filterTextBox.PlaceholderText;
-                filterTextBox.PlaceholderText = string.Empty;
-                filterTextBox.PlaceholderText = placeholder;
+                watermark = new Label
+                {
+                    Name = watermarkName,
+                    AutoSize = true,
+                    Text = watermarkText,
+                    UseMnemonic = false,
+                    Cursor = Cursors.IBeam,
+                    Anchor = AnchorStyles.Top | AnchorStyles.Left
+                };
+
+                form.Controls.Add(watermark);
+
+                Label capturedWatermark = watermark;
+                void UpdateWatermark(object sender, EventArgs e)
+                    => capturedWatermark.Visible = filterTextBox.TextLength == 0 && !filterTextBox.Focused;
+
+                filterTextBox.TextChanged += UpdateWatermark;
+                filterTextBox.GotFocus += UpdateWatermark;
+                filterTextBox.LostFocus += UpdateWatermark;
+                watermark.Click += (_, _) => filterTextBox.Focus();
             }
+
+            watermark.Text = watermarkText;
+            watermark.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            watermark.BackColor = surface;
+            watermark.ForeColor = muted;
+            watermark.Location = new Point(
+                filterTextBox.Left + 7,
+                filterTextBox.Top + Math.Max(1, (filterTextBox.Height - watermark.Height) / 2));
+            watermark.Visible = filterTextBox.TextLength == 0 && !filterTextBox.Focused;
+            watermark.BringToFront();
         }
 
         if (scanGroupBox is not null)
