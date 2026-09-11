@@ -1,0 +1,35 @@
+name: GUI UX Branch Build
+
+on:
+  push:
+    branches:
+      - gui-ux-refresh
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore CreamInstaller.sln
+
+      - name: Build Release
+        run: dotnet build CreamInstaller.sln --configuration Release --no-restore
+
+      - name: Publish Windows x64 single-file EXE
+        run: dotnet publish CreamInstaller.sln -c Release -r win-x64 -p:PublishSingleFile=true --self-contained true --output ./publish
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v7
+        with:
+          name: CreamInstaller-GUI-UX-Refresh
+          path: ./publish/CreamInstaller.exe
